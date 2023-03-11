@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/screens/LoginScreen.dart';
+import 'package:flutter_chat/screens/Registration.dart';
 
 class WelcomePage extends StatefulWidget {
+  static const String id = "WelcomePage";
   const WelcomePage({Key? key}) : super(key: key);
 
   @override
@@ -13,16 +16,19 @@ class _WelcomePageState extends State<WelcomePage> {
     return Scaffold(
     backgroundColor: Colors.white,
     body: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Row(
             children: <Widget>[
-              SizedBox(
-                height: 60.0,
-                child: Image.asset('images/logo.png'),
+              Hero(
+                tag: 'logo',
+                child: SizedBox(
+                  height: 60.0,
+                  child: Image.asset('images/logo.png'),
+                ),
               ),
               const Text(
                 'Super Chat',
@@ -45,7 +51,7 @@ class _WelcomePageState extends State<WelcomePage> {
               borderRadius: BorderRadius.circular(30.0),
               child: MaterialButton(
                 onPressed: () {
-                  //Go to login screen.
+                  Navigator.pushNamed(context, LoginScreen.id);
                 },
                 minWidth: 200.0,
                 height: 42.0,
@@ -63,7 +69,7 @@ class _WelcomePageState extends State<WelcomePage> {
               elevation: 8.0,
               child: MaterialButton(
                 onPressed: () {
-                  //Go to registration screen.
+                  Navigator.pushNamed(context, Registration.id);
                 },
                 minWidth: 200.0,
                 height: 42.0,
