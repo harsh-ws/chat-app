@@ -45,12 +45,15 @@ class _Registration extends State<LoginScreen> {
                     onChanged: (String value) {
                       email = value;
                     },
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       hintText: 'Email',
                       filled: true,
                       fillColor: Colors.grey,
+                      hintStyle: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                       border: OutlineInputBorder(
@@ -74,12 +77,15 @@ class _Registration extends State<LoginScreen> {
                     onChanged: (String value) {
                       password = value;
                     },
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                     obscureText: true,
                     decoration: const InputDecoration(
                       hintText: 'Password',
                       filled: true,
                       fillColor: Colors.grey,
+                      hintStyle: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                       border: OutlineInputBorder(

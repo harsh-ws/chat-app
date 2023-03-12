@@ -47,7 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Material(
               elevation: 8.0,
-              color: Colors.grey,
+              color: Colors.black,
               borderRadius: BorderRadius.circular(30.0),
               child: MaterialButton(
                 onPressed: () {

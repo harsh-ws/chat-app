@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/screens/WelcomeScreen.dart';
@@ -11,8 +12,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   late User loggedInUser;
+  late String _textMessage;
   @override
   void initState() {
     super.initState();
@@ -26,22 +29,80 @@ class _ChatScreenState extends State<ChatScreen> {
       print(loggedInUser.email);
     }
   }
-
+  void getMessageStream() async{
+    var db = await _firestore.collection('messages').snapshots();
+    await for (var snapshot in db){
+      for (var message in snapshot.docs){
+        print(message.data());
+      }
+    }
+    // final messages = await _firestore.collection('messages').snapshots();
+    // for (message in )
+  }
+  // void getMessages() async{
+  //   //final messages = await _firestore.collection('messages').get();
+  //   final messages = _firestore.collection("messages");
+  //   messages.get().then(
+  //   (querySnapshot) {
+  //   for (var docSnapshot in querySnapshot.docs) {
+  //   print('${docSnapshot.id} => ${docSnapshot.data()}');
+  //   }
+  //   },
+  //   onError: (e) => print("Error completing: $e"),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SuperChat'),
-        backgroundColor: Colors.blueAccent,
-        actions: <Widget>[
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, WelcomePage.id);
-              },
-              icon: const Icon(Icons.exit_to_app))
-        ],
-      ),
-      backgroundColor: Colors.grey,
-    );
+        appBar: AppBar(
+          title: const Text('SuperChat'),
+          backgroundColor: Colors.blueAccent,
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {
+                  getMessageStream();
+                  //_auth.signOut();
+                  //Navigator.pushNamed(context, WelcomePage.id);
+                },
+                icon: const Icon(Icons.exit_to_app))
+          ],
+        ),
+        //backgroundColor: Colors.grey,
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          _textMessage = value;
+                        },
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          hintText: 'Type your message here...',
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          _firestore.collection('messages').add({
+                            'sender': loggedInUser.email,
+                            'text': _textMessage
+                          });
+                        },
+                        icon: const Icon(Icons.send))
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
