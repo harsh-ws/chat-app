@@ -29,16 +29,18 @@ class _ChatScreenState extends State<ChatScreen> {
       print(loggedInUser.email);
     }
   }
-  void getMessageStream() async{
+
+  void getMessageStream() async {
     var db = await _firestore.collection('messages').snapshots();
-    await for (var snapshot in db){
-      for (var message in snapshot.docs){
+    await for (var snapshot in db) {
+      for (var message in snapshot.docs) {
         print(message.data());
       }
     }
     // final messages = await _firestore.collection('messages').snapshots();
     // for (message in )
   }
+
   // void getMessages() async{
   //   //final messages = await _firestore.collection('messages').get();
   //   final messages = _firestore.collection("messages");
@@ -73,6 +75,50 @@ class _ChatScreenState extends State<ChatScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              StreamBuilder(
+                stream: _firestore.collection('messages').snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                        snapshot) {
+                  List<Widget> children;
+                  List<Text> messageWidgets = [];
+                  if (snapshot.hasError) {
+                    children = <Widget>[
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 60,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text('Error: ${snapshot.error}'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text('Stack trace: ${snapshot.stackTrace}'),
+                      ),
+                    ];
+                  } else if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.blueAccent,
+                      ),
+                    );
+                  }
+                  var messages = snapshot.data?.docs;
+                  for (var message in messages!) {
+                    final messageData = message.data()['text'];
+                    final messageSender = message.data()['sender'];
+                    final messageWidget =
+                        Text('$messageData from $messageSender');
+                    messageWidgets.add(messageWidget);
+                  }
+
+                  return Column(
+                    children: messageWidgets,
+                  );
+                },
+              ),
               Container(
                 child: Row(
                   children: <Widget>[
