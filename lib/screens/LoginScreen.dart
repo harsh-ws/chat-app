@@ -29,11 +29,13 @@ class _Registration extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Hero(
-                tag: 'logo',
-                child: SizedBox(
-                  height: 160.0,
-                  child: Image.asset('images/logo.png'),
+              Flexible(
+                child: Hero(
+                  tag: 'logo',
+                  child: SizedBox(
+                    height: 160.0,
+                    child: Image.asset('images/logo.png'),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -116,7 +118,7 @@ class _Registration extends State<LoginScreen> {
                       });
                       try {
                         final newUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
-                        if (newUser != null){
+                        if (newUser != false){
                           Navigator.pushNamed(context, ChatScreen.id);
                         }
                         setState(() {
